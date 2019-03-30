@@ -244,6 +244,7 @@
               ("SYN", BOOLEAN),
               ("FIN", BOOLEAN),
               ("RTR", BOOLEAN),
+              ("DTA", BOOLEAN),
               ("NXT", BOOLEAN),
               ("checkSum", BUFFER),  
               ("data", BUFFER)
