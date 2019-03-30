@@ -154,8 +154,8 @@
 	                                         Pimp B missing Packets 1201, 1240
 	      <-----<RTRFLAG=TRUE><ACKNUM 1201>--Pimp B requests missing packets
 	      <-----<RTRFLAG=TRUE><ACKNUM 1240>--
-	      ------<SEQNUM=1201>--------------->
-              ------<SEQNUM=1240>---------------> Pimp B recieved all missing packets
+	      ------<DTAFLAG=TRUE><SEQNUM=1201>->
+              ------<DTAFLAG=TRUE><SEQNUM=1240>-> Pimp B recieved all missing packets
 	     <------<NXTFLAG=TRUE>--------------- Pimp B asks for next window to be sent
 	     -------<SEQNUM=1601>--------------->
 	                  ...
@@ -168,13 +168,13 @@
 	     B and Pimp B will treat this as the end of the current window</t>
 	 <t> PIMP A                                   PIMP B 
 
-	      -------<SEQNUM=1601>--------------->
+	      ------<DTAFLAG=TRUE><SEQNUM=1601>->
 	                  ...
-	      -------<SEQNUM=3101>---------------> Pimp B recieved the whole next window
+	      -------<DTAFLAG=TRUE><SEQNUM=3101>-> Pimp B recieved the whole next window
               <------<NXTFLAG=TRUE>--------------- Pimp B asks for next window to be sent
-	      -------<SEQNUM=1601>--------------->
+	      -------<<DTAFLAG=TRUE>SEQNUM=1601>->
 	                  ...
-	     -------<SEQNUM=1700>---------------> 
+	     -------<DTAFLAG=TRUE><SEQNUM=1700>-> 
              -------<NXTFLAG=TRUE><SEQNUM=1700>-> Pimp B sets 1700 as the end of the current window, and has recieved it all
              <------<NXTFLAG=TRUE>--------------- Pimp B lets Pimp A know they have recieved up to 1700</t>
 
