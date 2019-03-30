@@ -144,10 +144,46 @@
      traffic.</t>
      
      <t>In order to simplify the protocol and reduce network congestion,
-     the PIMP window is set to a standard size (the maximum size allowed by
-     a two bit number - 65,535 - which is the largest number that can
-     be put in the two bit portion of the PIMP packet allocated to "window".</t>
-     
+     the PIMP window is set to a standard size - 1500 packets. After the 
+	handshake has been completed, the window starts with the next sequence
+	number after the final ack. </t>
+	  
+     <t> PIMP A                                   PIMP B
+	 OPEN -----<ACKFLAG=TRUE><ACKNUM 99>---> OPEN
+	     				         Pimp B now waiting 2 seconds for packets 100 - 1600
+	                                         Pimp B missing Packets 1201, 1240
+	      <-----<RTRFLAG=TRUE><ACKNUM 1201>--Pimp B requests missing packets
+	      <-----<RTRFLAG=TRUE><ACKNUM 1240>--
+	      ------<SEQNUM=1201>--------------->
+              ------<SEQNUM=1240>---------------> Pimp B recieved all missing packets
+	     <------<NXTFLAG=TRUE>--------------- Pimp B asks for next window to be sent
+	     -------<SEQNUM=1601>--------------->
+	                  ...
+	     -------<SEQNUM=3101>---------------> Pimp B recieved the whole next window	</t>
+	     
+	     
+     <t> We have one special case where Pimp A has less data than the window to send. 
+	 In this case, Pimp A, the client, will send a NXT Flag seqNum with the end
+	     of the data they have. When they are done sending, PIMP A sends this flag and PIMP
+	     B and Pimp B will treat this as the end of the current window</t>
+	 <t> PIMP A                                   PIMP B 
+
+	      -------<SEQNUM=1601>--------------->
+	                  ...
+	      -------<SEQNUM=3101>---------------> Pimp B recieved the whole next window
+              <------<NXTFLAG=TRUE>--------------- Pimp B asks for next window to be sent
+	      -------<SEQNUM=1601>--------------->
+	                  ...
+	     -------<SEQNUM=1700>---------------> 
+             -------<NXTFLAG=TRUE><SEQNUM=1700>-> Pimp B sets 1700 as the end of the current window, and has recieved it all
+             <------<NXTFLAG=TRUE>--------------- Pimp B lets Pimp A know they have recieved up to 1700</t>
+
+    <t> When Pimp A has more data to send, they will send a window of 1500 packets, starting at 1701 (i.e. 1701-3201) 
+	to Pimp B. If they have less than 1500 packets, they will send a NXTFLAG packet with SeqNum set to the end
+	    of the amount they have before sending. These packet numbers are arbitrarily chosen. There is no need
+            to start at a certain number, though count will increase by one each time a packet is sent.</t>
+	      
+	     
      <t>Additionally, the protocol is simplified by sending back a retransmission 
      request packet for every missing sequence number after the window has been 
      filled. The window is identified as "filled" after a specified timeout, and 
@@ -170,6 +206,8 @@
      nothing is recieved from a client within the timeout, the connection
      is closed. SYN flooding may briefly occur, but the TCB will be flushed
      of any connections that are not fully open each time the timeout elapses.</t>
+	   
+	 
     
     <section title="Reliability">
     <t>The prime directive to PIMP is reliability. In order for data
@@ -206,6 +244,7 @@
               ("SYN", BOOLEAN),
               ("FIN", BOOLEAN),
               ("RTR", BOOLEAN),
+              ("NXT", BOOLEAN),
               ("checkSum", BUFFER),  
               ("data", BUFFER)
             ]
