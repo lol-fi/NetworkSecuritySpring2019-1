@@ -385,12 +385,12 @@ PIMP A                                                       PIMP B
  +---------+          rcv FIN  \                        +---------+
    | rcv ACK of FIN   -------   |                                 |
    | --------------   snd ACK   |                         ------- |
-   V        x                   V                         snd FIN V
+   V        x                   V                     snd FIN-ACK V
  +---------+                +---------+                 +---------+
- |FINWAIT-2|                | CLOSING |                 | LAST-ACK|
+ |FINWAIT-2|                | CLOSING |                 ||
  +---------+                +---------+                 +---------+
-   |              rcv ACK of FIN |                 rcv ACK of FIN |
-   |  rcv FIN     -------------- |    Timeout=2MSL -------------- |
+   |                             |                 rcv ACK of FIN |
+   |  rcv FIN-ACK -------------- |    Timeout=2MSL -------------- |
    |  -------            x       V    ------------        x       V
     \ snd ACK               +---------+delete TCB       +---------+
      ---------------------->|TIME WAIT|---------------->| CLOSED  |
