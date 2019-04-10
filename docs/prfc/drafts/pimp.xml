@@ -145,7 +145,8 @@
      <t>In order to simplify the protocol and reduce network congestion,
      the PIMP window is set to a standard size (the maximum size allowed by
      a two bit number - 65,535 - which is the largest number that can
-     be put in the two bit portion of the PIMP packet allocated to "window".</t>
+     be put in the two bit portion of the PIMP packet allocated to "window".
+	   A max packet size of 4000 bytes of data is recommended.</t>
      
      <t>In case of packet loss in extreme scenario, for example, client only sends one packet to server, but packet is lost, both server and client wait for the response from the other side. The ACK mechanism is needed.</t>
 
